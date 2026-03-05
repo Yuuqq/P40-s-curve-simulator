@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📰</text></svg>" />
+  <title>P40 创新扩散 S 曲线调节滑块</title>
+    <link rel="stylesheet" href="../shared/design-tokens.css" />
+<link rel="stylesheet" href="./styles.css" />
+  <meta name="description" content="创新扩散 S 曲线调节滑块。P40 创新扩散 S 曲线调节滑块" />
+  <meta property="og:title" content="P40 创新扩散 S 曲线滑块" />
+  <meta property="og:description" content="创新扩散 S 曲线滑块 — 前端纯静态新闻工具" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://yuuqq.github.io/P40-s-curve-simulator/" />
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <h1>创新扩散 S 曲线调节滑块</h1>
+      <p>调节早期采用者、传播率和阻力系数，观察扩散曲线变化。</p>
+    </header>
+
+    <section class="card controls">
+      <label for="seed">早期采用者比例 <span id="seedVal" class="val">8%</span><input id="seed" type="range" min="1" max="30" value="8" /></label>
+      <label for="seed">传播率 <span id="rateVal" class="val">12</span><input id="rate" type="range" min="1" max="30" value="12"  aria-label="r at e"/></label>
+      <label for="resistance">阻力系数 <span id="resistanceVal" class="val">10</span><input id="resistance" type="range" min="1" max="30" value="10" /></label>
+      <div class="actions">
+        <button id="addCompareBtn" type="button">加入对比组</button>
+        <button id="clearCompareBtn" type="button">清空对比组</button>
+      </div>
+      <p class="formula"><strong>模型：</strong>f(t)=L/(1+e<sup>-k(t-x0)</sup>)，k=rate/resistance，x0=10-seed×8</p>
+      <p id="status" aria-live="polite">状态: 已更新</p>
+    </section>
+
+    <section class="card">
+      <h2>关键节点（当前参数）</h2>
+      <ul class="metrics">
+        <li>拐点时间 t*: <span id="inflectionT">-</span></li>
+        <li>拐点覆盖率 f(t*): <span id="inflectionY">-</span></li>
+        <li>90% 饱和时间 t90: <span id="saturationT90">-</span></li>
+      </ul>
+      <p id="compareMeta" class="note">对比组: 0</p>
+    </section>
+
+    <section class="card">
+      <div id="chart" class="chart"></div>
+    </section>
+  </main>
+  <script src="./pm-metrics.js" defer></script>
+  <script src="./app.js" defer></script>
+
+  <!-- Privacy Notice -->
+  <div style="text-align:center;padding:12px 16px;font-size:12px;color:#888;border-top:1px solid #eee;margin-top:24px;">
+    🔒 隐私提示：本工具所有数据处理均在您的浏览器本地完成，不会上传任何数据至服务器。
+  </div>
+
+  <!-- Cross-Project Navigation -->
+  <nav style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;font-size:13px;border-top:1px solid #e5e5e5;margin-top:16px;color:#666;">
+    <a href="https://yuuqq.github.io/_codex/" style="text-decoration:none;">📋 工具箱导航</a>
+    <span style="opacity:.4">P40</span>
+  </nav>
+</body>
+</html>
