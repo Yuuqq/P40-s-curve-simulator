@@ -12,6 +12,15 @@
   <meta property="og:description" content="创新扩散 S 曲线滑块 — 前端纯静态新闻工具" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://yuuqq.github.io/P40-s-curve-simulator/" />
+  <link rel="manifest" href="./manifest.json" />
+<style media="print">
+.gnav,.pedagogy-panel,.explore-section,[class*="dark-toggle"],button[aria-label]{display:none!important}
+body{background:#fff!important;color:#000!important;font-size:11pt}
+.app,main,.container{box-shadow:none!important;border:none!important;padding:0!important}
+a{color:#000!important;text-decoration:underline}
+a[href]::after{content:" (" attr(href) ")";font-size:9pt;color:#666}
+@page{margin:2cm}
+</style>
 </head>
 <body>
   <main class="app">
@@ -20,9 +29,11 @@
       <p>调节早期采用者、传播率和阻力系数，观察扩散曲线变化。</p>
     </header>
 
+    <section class="card"><details class="teach-card" open><summary>🎓 S 曲线与传播动力学</summary><p>S 曲线（Logistic Growth）描述了信息、技术、流行病的传播过程：先是缓慢启动，接着爆发式增长，最后趋于饱和。理解这个模型可以帮助记者判断舆情处于哪个阶段、预测传播峰值。</p></details></section>
+
     <section class="card controls">
       <label for="seed">早期采用者比例 <span id="seedVal" class="val">8%</span><input id="seed" type="range" min="1" max="30" value="8" /></label>
-      <label for="seed">传播率 <span id="rateVal" class="val">12</span><input id="rate" type="range" min="1" max="30" value="12"  aria-label="r at e"/></label>
+      <label for="rate">传播率 <span id="rateVal" class="val">12</span><input id="rate" type="range" min="1" max="30" value="12" /></label>
       <label for="resistance">阻力系数 <span id="resistanceVal" class="val">10</span><input id="resistance" type="range" min="1" max="30" value="10" /></label>
       <div class="actions">
         <button id="addCompareBtn" type="button">加入对比组</button>
@@ -56,8 +67,20 @@
 
   <!-- Cross-Project Navigation -->
   <nav style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;font-size:13px;border-top:1px solid #e5e5e5;margin-top:16px;color:#666;">
-    <a href="https://yuuqq.github.io/_codex/" style="text-decoration:none;">📋 工具箱导航</a>
+    <a href="https://yuuqq.github.io/journalism-toolbox/" style="text-decoration:none;">📋 工具箱导航</a>
     <span style="opacity:.4">P40</span>
   </nav>
+  <script src="../shared/dark-toggle.js" defer></script>
+  <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{})}</script>
+  <script src="../shared/cmd-palette.js" defer></script>
+  <script src="../shared/toast.js" defer></script>
+  <script src="../shared/onboarding.js" defer></script>
+
+  <script src="../shared/pedagogy-data-p1.js" defer></script>
+  <script src="../shared/pedagogy-data-p2.js" defer></script>
+  <script src="../shared/global-nav.js" defer></script>
+  <script src="../shared/kbd-hints.js" defer></script>
 </body>
 </html>
+
+
