@@ -143,7 +143,11 @@ function renderKeyNodes(p) {
   const { inflectionT, inflectionY, t90 } = computeKeyNodes(p);
   inflectionTEl.textContent = fmtNum(inflectionT, 2);
   inflectionYEl.textContent = fmtPct(inflectionY);
-  saturationT90El.textContent = Number.isFinite(t90) ? fmtNum(t90, 2) : "-";
+  if (Number.isFinite(t90)) {
+    saturationT90El.textContent = t90 > 1000 ? "> 1000" : fmtNum(t90, 2);
+  } else {
+    saturationT90El.textContent = "-";
+  }
 }
 
 function renderChart(current, groups) {
