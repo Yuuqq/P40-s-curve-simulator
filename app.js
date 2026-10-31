@@ -18,14 +18,34 @@ const chartHost = document.getElementById("chart");
 
 const STORAGE_COMPARE = "p40_compare_groups_v1";
 
-const COLORS = [
-  "#2563eb",
-  "#16a34a",
-  "#f59e0b",
-  "#ef4444",
-  "#8b5cf6",
-  "#06b6d4"
+const SERIES_FALLBACKS = [
+  "#A2402F",
+  "#51724B",
+  "#8C6A2F",
+  "#3A2E20",
+  "#7C2F22",
+  "#6E5B41"
 ];
+
+function token(name, fallback) {
+  try {
+    const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return value || fallback;
+  } catch (_e) {
+    return fallback;
+  }
+}
+
+function seriesColors() {
+  return [
+    token("--cinnabar", SERIES_FALLBACKS[0]),
+    token("--verdigris", SERIES_FALLBACKS[1]),
+    token("--gold", SERIES_FALLBACKS[2]),
+    token("--ink", SERIES_FALLBACKS[3]),
+    token("--accent-hover", SERIES_FALLBACKS[4]),
+    token("--ink-secondary", SERIES_FALLBACKS[5])
+  ];
+}
 
 function setStatus(text) {
   statusEl.textContent = `状态: ${text}`;
@@ -149,7 +169,7 @@ function renderKeyNodes(p) {
 function renderChart(current, groups) {
   const width = 820;
   const height = 420;
-  const pad = { l: 54, r: 18, t: 18, b: 44 };
+  const pad = { l: 58, r: 18, t: 32, b: 56 };
   const plotW = width - pad.l - pad.r;
   const plotH = height - pad.t - pad.b;
 
@@ -160,30 +180,37 @@ function renderChart(current, groups) {
   const mapX = (t) => pad.l + (clamp(t, xMin, xMax) - xMin) / (xMax - xMin) * plotW;
   const mapY = (y) => pad.t + (1 - clamp(y, 0, 1)) * plotH;
 
+  const colors = seriesColors();
+  const inkSoft = token("--ink-secondary", "#6E5B41");
+  const line = token("--line", "#D3C4A0");
+  const paper = token("--bg", "#F0E6CF");
+  const plot = token("--paper-hi", "#F7EFDA");
+  const cinnabar = token("--cinnabar", "#A2402F");
+
   const gridLines = [];
   for (let i = 0; i <= 4; i += 1) {
     const y = pad.t + (plotH * i) / 4;
     const pct = ((1 - i / 4) * 100).toFixed(0);
     gridLines.push(
-      `<line x1="${pad.l}" y1="${y}" x2="${width - pad.r}" y2="${y}" stroke="rgba(15,23,42,.10)" />`
+      `<line x1="${pad.l}" y1="${y}" x2="${width - pad.r}" y2="${y}" stroke="${line}" />`
     );
     gridLines.push(
-      `<text x="${pad.l - 10}" y="${y + 4}" text-anchor="end" font-size="12" fill="rgba(15,23,42,.65)">${escapeXml(pct)}%</text>`
+      `<text x="${pad.l - 10}" y="${y + 4}" text-anchor="end" font-size="12" fill="${inkSoft}">${escapeXml(pct)}%</text>`
     );
   }
   for (let i = 0; i <= 4; i += 1) {
     const x = pad.l + (plotW * i) / 4;
     const t = (xMin + ((xMax - xMin) * i) / 4).toFixed(0);
     gridLines.push(
-      `<line x1="${x}" y1="${pad.t}" x2="${x}" y2="${height - pad.b}" stroke="rgba(15,23,42,.08)" />`
+      `<line x1="${x}" y1="${pad.t}" x2="${x}" y2="${height - pad.b}" stroke="${line}" />`
     );
     gridLines.push(
-      `<text x="${x}" y="${height - pad.b + 22}" text-anchor="middle" font-size="12" fill="rgba(15,23,42,.65)">${escapeXml(t)}</text>`
+      `<text x="${x}" y="${height - pad.b + 18}" text-anchor="middle" font-size="12" fill="${inkSoft}">${escapeXml(t)}</text>`
     );
   }
 
   const series = [
-    { label: "当前参数", p: current, color: COLORS[0], width: 3.2, dash: "" },
+    { label: "当前参数", p: current, color: colors[0], width: 3.2, dash: "" },
     ...groups.map((g, idx) => {
       const p = {
         seed: clamp(Number(g.seed), 1, 30) / 100,
@@ -199,7 +226,7 @@ function renderChart(current, groups) {
       return {
         label: `对比 #${idx + 1}`,
         p: derived,
-        color: COLORS[(idx + 1) % COLORS.length],
+        color: colors[(idx + 1) % colors.length],
         width: 2.2,
         dash: "6 6"
       };
@@ -216,8 +243,8 @@ function renderChart(current, groups) {
 
   const { inflectionT } = computeKeyNodes(current);
   const infX = mapX(inflectionT);
-  const infLine = `<line x1="${infX}" y1="${pad.t}" x2="${infX}" y2="${height - pad.b}" stroke="rgba(37,99,235,.45)" stroke-dasharray="4 6" />`;
-  const infLabel = `<text x="${infX}" y="${pad.t + 14}" text-anchor="middle" font-size="12" fill="rgba(37,99,235,.95)">拐点 t*</text>`;
+  const infLine = `<line x1="${infX}" y1="${pad.t}" x2="${infX}" y2="${height - pad.b}" stroke="${cinnabar}" stroke-opacity="0.55" stroke-dasharray="4 6" />`;
+  const infLabel = `<text x="${infX}" y="${pad.t + 14}" text-anchor="middle" font-size="12" fill="${cinnabar}">拐点 t*</text>`;
 
   const legendItems = series
     .map((s, idx) => {
@@ -225,25 +252,15 @@ function renderChart(current, groups) {
       return `
         <line x1="${pad.l + 8}" y1="${y - 4}" x2="${pad.l + 26}" y2="${y - 4}"
           stroke="${s.color}" stroke-width="${idx === 0 ? 3.2 : 2.2}" stroke-dasharray="${s.dash}" />
-        <text x="${pad.l + 32}" y="${y}" font-size="12" fill="rgba(15,23,42,.72)">${escapeXml(s.label)}</text>
+        <text x="${pad.l + 32}" y="${y}" font-size="12" fill="${inkSoft}">${escapeXml(s.label)}</text>
       `.trim();
     })
     .join("");
 
   const svg = `
     <svg viewBox="0 0 ${width} ${height}" class="chartSvg" role="img" aria-label="S 曲线扩散模拟图">
-      <defs>
-        <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.10"/>
-        </filter>
-        <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#ffffff"/>
-          <stop offset="100%" stop-color="#f6fbff"/>
-        </linearGradient>
-      </defs>
-
-      <rect x="0" y="0" width="${width}" height="${height}" rx="16" fill="url(#bg)" filter="url(#softShadow)"></rect>
-      <rect x="${pad.l}" y="${pad.t}" width="${plotW}" height="${plotH}" rx="12" fill="#ffffff" stroke="rgba(15,23,42,.10)"></rect>
+      <rect x="0" y="0" width="${width}" height="${height}" rx="6" fill="${paper}"></rect>
+      <rect x="${pad.l}" y="${pad.t}" width="${plotW}" height="${plotH}" rx="6" fill="${plot}" stroke="${line}"></rect>
 
       ${gridLines.join("\n")}
       ${infLine}
@@ -251,8 +268,8 @@ function renderChart(current, groups) {
 
       <g>${paths}</g>
 
-      <text x="${pad.l}" y="${height - 12}" font-size="12" fill="rgba(15,23,42,.65)">时间 t（0–20）</text>
-      <text x="16" y="${pad.t - 2}" font-size="12" fill="rgba(15,23,42,.65)">覆盖率</text>
+      <text x="${(pad.l + width - pad.r) / 2}" y="${height - 10}" text-anchor="middle" font-size="12" fill="${inkSoft}">时间 t（0–20）</text>
+      <text x="${pad.l}" y="16" font-size="12" fill="${inkSoft}">覆盖率</text>
 
       <g>${legendItems}</g>
     </svg>
@@ -323,7 +340,51 @@ function bind() {
     // The SVG is viewBox-based, no expensive work here, but re-render keeps text crisp on some browsers.
     update();
   });
+
+  const themeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  themeQuery.addEventListener("change", update);
+  new MutationObserver(update).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"]
+  });
 }
+
+const DECORATIVE_EMOJI = /\p{Extended_Pictographic}/gu;
+
+function stripDecorativeEmoji(root) {
+  if (!root) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const parent = node.parentElement;
+      if (parent && parent.classList.contains("arrow")) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach((node) => {
+    DECORATIVE_EMOJI.lastIndex = 0;
+    if (!DECORATIVE_EMOJI.test(node.nodeValue || "")) return;
+    DECORATIVE_EMOJI.lastIndex = 0;
+    const next = node.nodeValue.replace(DECORATIVE_EMOJI, "").replace(/[ \t]{2,}/g, " ");
+    node.nodeValue = next.replace(/^\s+/, "");
+  });
+}
+
+new MutationObserver((records) => {
+  records.forEach((record) => {
+    record.addedNodes.forEach((node) => {
+      if (node.nodeType !== 1) return;
+      const panels = [];
+      if (node.matches?.(".pedagogy-panel, .flow-guide")) panels.push(node);
+      node.querySelectorAll?.(".pedagogy-panel, .flow-guide").forEach((panel) => panels.push(panel));
+      panels.forEach((panel) => {
+        stripDecorativeEmoji(panel);
+        if (panel.classList.contains("flow-guide")) panel.open = false;
+      });
+    });
+  });
+}).observe(document.body, { childList: true, subtree: true });
 
 bind();
 update();

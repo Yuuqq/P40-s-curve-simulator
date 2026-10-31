@@ -3,36 +3,38 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#f3f8ff">
-  <meta name="color-scheme" content="light dark">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📰</text></svg>" />
+  <meta name="theme-color" content="#F0E6CF" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#241B11" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
   <title>P40 创新扩散 S 曲线调节滑块</title>
-    <link rel="stylesheet" href="../shared/design-tokens.css" />
-<link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="../shared/design-tokens.css" />
+  <link rel="stylesheet" href="../shared/modern-styles.css" />
+  <link rel="stylesheet" href="../shared/tool-chrome.css" />
+  <link rel="stylesheet" href="./styles.css" />
   <meta name="description" content="创新扩散 S 曲线调节滑块。P40 创新扩散 S 曲线调节滑块" />
   <meta property="og:title" content="P40 创新扩散 S 曲线滑块" />
   <meta property="og:description" content="创新扩散 S 曲线滑块 — 前端纯静态新闻工具" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://yuuqq.github.io/P40-s-curve-simulator/" />
   <link rel="manifest" href="./manifest.json" />
-<style media="print">
-.gnav,.pedagogy-panel,.explore-section,[class*="dark-toggle"],button[aria-label]{display:none!important}
-body{background:#fff!important;color:#000!important;font-size:11pt}
-.app,main,.container{box-shadow:none!important;border:none!important;padding:0!important}
-a{color:#000!important;text-decoration:underline}
-a[href]::after{content:" (" attr(href) ")";font-size:9pt;color:#666}
-@page{margin:2cm}
-</style>
 </head>
 <body>
   <a href="#main" class="skip-link">跳到主内容 / Skip to main content</a>
+  <header class="tool-chrome" data-tool-id="P40">
+    <a class="tool-chrome__mark" href="../P00-dashboard/">新闻实验工具</a>
+    <span class="tool-chrome__id">P40</span>
+  </header>
   <main id="main" class="app">
     <header class="hero">
       <h1>创新扩散 S 曲线调节滑块</h1>
       <p>调节早期采用者、传播率和阻力系数，观察扩散曲线变化。</p>
     </header>
 
-    <section class="card"><details class="teach-card" open><summary>🎓 S 曲线与传播动力学</summary><p>S 曲线（Logistic Growth）描述了信息、技术、流行病的传播过程：先是缓慢启动，接着爆发式增长，最后趋于饱和。理解这个模型可以帮助记者判断舆情处于哪个阶段、预测传播峰值。</p></details></section>
+    <details class="tool-teach">
+      <summary>如何使用</summary>
+      <p>S 曲线（Logistic Growth）描述了信息、技术、流行病的传播过程：先是缓慢启动，接着爆发式增长，最后趋于饱和。理解这个模型可以帮助记者判断舆情处于哪个阶段、预测传播峰值。</p>
+    </details>
 
     <section class="card controls">
       <label for="seed">早期采用者比例 <span id="seedVal" class="val">8%</span><input id="seed" type="range" min="1" max="30" value="8" /></label>
@@ -40,10 +42,10 @@ a[href]::after{content:" (" attr(href) ")";font-size:9pt;color:#666}
       <label for="resistance">阻力系数 <span id="resistanceVal" class="val">10</span><input id="resistance" type="range" min="1" max="30" value="10" /></label>
       <div class="actions">
         <button id="addCompareBtn" type="button">加入对比组</button>
-        <button id="clearCompareBtn" type="button">清空对比组</button>
+        <button id="clearCompareBtn" class="secondary" type="button">清空对比组</button>
       </div>
       <p class="formula"><strong>模型：</strong>f(t)=L/(1+e<sup>-k(t-x0)</sup>)，k=rate/resistance，x0=10-seed×8</p>
-      <p id="status" aria-live="polite">状态: 已更新</p>
+      <p id="status" role="status">状态: 已更新</p>
     </section>
 
     <section class="card">
@@ -60,23 +62,13 @@ a[href]::after{content:" (" attr(href) ")";font-size:9pt;color:#666}
       <div id="chart" class="chart"></div>
     </section>
   </main>
+  <footer class="tool-footer">
+    数据边界以附录 A 为准：能在本机完成的计算不主动外发；示例数据仅供课堂；本工具输出不得单独当作结论。
+    <a href="../P00-dashboard/">返回工具箱</a>
+  </footer>
   <script src="./pm-metrics.js" defer></script>
   <script src="./app.js" defer></script>
-
-  <!-- Privacy Notice -->
-  <div style="text-align:center;padding:12px 16px;font-size:12px;color:#888;border-top:1px solid #eee;margin-top:24px;">
-    🔒 隐私提示：本工具所有数据处理均在您的浏览器本地完成，不会上传任何数据至服务器。
-  </div>
-
-  <!-- Cross-Project Navigation -->
-  <nav style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;font-size:13px;border-top:1px solid #e5e5e5;margin-top:16px;color:#666;">
-    <a href="https://yuuqq.github.io/journalism-toolbox/" style="text-decoration:none;">📋 工具箱导航</a>
-    <span style="opacity:.4">P40</span>
-  </nav>
   <script src="../shared/releases/v2.6/loader.js" data-modules="dark,cmd,toast,onboarding,pedagogy-p1,pedagogy-p2,nav,kbd"></script>
   <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{})}</script>
-
 </body>
 </html>
-
-
