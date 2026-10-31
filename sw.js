@@ -1,5 +1,5 @@
 /**
- * 🔌 通用 Service Worker — 缓存优先策略
+ * 通用 Service Worker — 缓存优先策略
  * 适用于全部 50 个新闻工具项目。
  *
  * 策略：
@@ -8,14 +8,18 @@
  * 3. 网络优先 (Network-First) 获取 API 请求
  * 4. 离线回退页面
  */
-const CACHE_NAME = "journalism-tool-v1";
+const CACHE_NAME = "p40-s-curve-hallmark-v1";
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./pm-metrics.js",
+  "./favicon.svg",
+  "./manifest.json",
   "../shared/design-tokens.css",
+  "../shared/modern-styles.css",
+  "../shared/tool-chrome.css",
   "../shared/dark-toggle.js"
 ];
 
